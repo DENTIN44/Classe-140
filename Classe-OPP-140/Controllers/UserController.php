@@ -8,8 +8,8 @@ class UserController {
         $this->userHandler = new UserHandler($conn);
     }
 
-    // public function index() {
-    //     return $this->userHandler->fetchUsers();
-    // }
+    public function index() {
+        return $this->userHandler->fetchUsers();
+    }
 }
 ?>

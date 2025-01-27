@@ -1,5 +1,5 @@
 <?php
-require 'config.php';
+require 'Database/Database.php';
 
 // Define a class to handle user registration
 class UserRegistration {
