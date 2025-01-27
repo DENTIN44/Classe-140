@@ -1,6 +1,6 @@
 <?php
 // Import the configuration file
-require '../config/config.php';
+require 'config.php';
 
 // Define a class to handle user-related operations
 class UserHandler {

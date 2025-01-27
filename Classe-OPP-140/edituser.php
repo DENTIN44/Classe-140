@@ -1,6 +1,6 @@
 <?php
 // Include database connection file
-require '../config/config.php'; // Adjust the path as needed
+require 'config.php'; // Adjust the path as needed
 
 // User class to handle user-related operations
 class User {

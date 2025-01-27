@@ -1,5 +1,5 @@
 <?php
-require '../config/config.php'; // Include the database connection file
+require 'config.php'; // Include the database connection file
 
 // Define a class to handle user deletion
 class UserManager {

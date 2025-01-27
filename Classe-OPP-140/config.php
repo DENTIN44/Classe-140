@@ -33,20 +33,20 @@ class Database {
         $dotenv->load();
     
         // Debugging: Print environment variables
-        echo "Environment variables loaded:<br>";
-        echo "DB_HOST: " . getenv('DB_HOST') . "<br>";
-        echo "DB_USERNAME: " . getenv('DB_USERNAME') . "<br>";
-        echo "DB_PASSWORD: " . getenv('DB_PASSWORD') . "<br>";
-        echo "DB_DATABASE: " . getenv('DB_DATABASE') . "<br>";
+        // echo "Environment variables loaded:<br>";
+        // echo "DB_HOST: " . $_ENV['DB_HOST'] . "<br>";
+        // echo "DB_USERNAME: " . $_ENV['DB_USERNAME'] . "<br>";
+        // echo "DB_PASSWORD: " . $_ENV['DB_PASSWORD'] . "<br>";
+        // echo "DB_DATABASE: " . $_ENV['DB_DATABASE'] . "<br>";
     }
     
     private function connect() {
-        $servername = getenv('DB_HOST');
-        $username = getenv('DB_USERNAME');
-        $password = getenv('DB_PASSWORD');
-        $dbname = getenv('DB_DATABASE');
+        $servername = $_ENV['DB_HOST'];
+        $username = $_ENV['DB_USERNAME'];
+        $password = $_ENV['DB_PASSWORD'];
+        $dbname = $_ENV['DB_DATABASE'];
     
-        echo "Connecting with username: $username<br>";
+        // echo "Connecting with username: $username<br>";
     
         $this->conn = new mysqli($servername, $username, $password, $dbname);
     
@@ -57,9 +57,9 @@ class Database {
 
     // Method to create the database if it does not exist
     public function createDatabase() {
-        $servername = getenv('DB_HOST');
-        $username = getenv('DB_USERNAME');
-        $password = getenv('DB_PASSWORD');
+        $servername = $_ENV['DB_HOST'];
+        $username = $_ENV['DB_USERNAME'];
+        $password = $_ENV['DB_PASSWORD'];
         
         // Establish connection without selecting the database to create it
         $conn = new mysqli($servername, $username, $password);
@@ -69,9 +69,9 @@ class Database {
             throw new Exception("Connection failed: " . $conn->connect_error);
         }
 
-        $sql = "CREATE DATABASE IF NOT EXISTS " . getenv('DB_DATABASE');
+        $sql = "CREATE DATABASE IF NOT EXISTS " . $_ENV['DB_DATABASE'];;
         if ($conn->query($sql) === TRUE) {
-            echo "Database created successfully or already exists.<br>";
+            // echo "Database created successfully or already exists.<br>";
         } else {
             throw new Exception("Error creating database: " . $conn->error);
         }
@@ -93,7 +93,7 @@ class Database {
                 )";
 
         if ($conn->query($sql) === TRUE) {
-            echo "Table 'Users' created successfully or already exists.<br>";
+            // echo "Table 'Users' created successfully or already exists.<br>";
         } else {
             throw new Exception("Error creating table: " . $conn->error);
         }
