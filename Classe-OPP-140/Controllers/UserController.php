@@ -1,5 +1,5 @@
 <?php
-require 'fetchuser.php';
+require_once 'fetchuser.php';
 
 class UserController {
     private $userHandler;

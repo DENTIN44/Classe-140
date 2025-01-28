@@ -1,5 +1,5 @@
 <?php
-require 'Database/Database.php';
+require_once 'Models/Database.php';
 
 // Define a class to handle user registration
 class UserRegistration {
@@ -14,6 +14,10 @@ class UserRegistration {
     public function registerUser($email, $password) {
         // Hash the password
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        if (!$this->conn) {
+            die("Database connection not established.");
+        }
 
         // Prepare the SQL statement
         $stmt = $this->conn->prepare("INSERT INTO Users (email, password) VALUES (?, ?)");

@@ -1,18 +1,23 @@
 <?php
 // Import the configuration file
-require 'config.php';
+require_once 'Models/Database.php';  // Include the controller
 
 // Define a class to handle user-related operations
 class UserHandler {
     private $conn; // Private property to hold the database connection
 
     // Constructor to initialize the database connection
-    public function __construct($dbConnection) {
-        $this->conn = $dbConnection;
+    public function __construct($conn) {
+        $this->conn = $conn;
     }
 
     // Method to fetch all users from the database
     public function fetchUsers() {
+
+        if ($this->conn === null) {
+            die('Database connection not established.');
+        }
+
         // SQL query to select all users ordered by creation date in descending order
         $sql = "SELECT * FROM Users ORDER BY createdAt DESC";
         

@@ -1,3 +1,12 @@
+
+<?php
+require_once 'Models/Database.php';  // Include the controller
+require_once 'Controllers/UserRegistration.php';  // Include the controller
+
+$registerController = new RegisterController($conn);
+$registerController->handleRegistration($email, $password);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
