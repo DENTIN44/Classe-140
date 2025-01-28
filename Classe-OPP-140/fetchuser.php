@@ -41,17 +41,17 @@ class UserHandler {
 }
 
 // Usage example
-try {
-    // Create an instance of the UserHandler class
-    $userHandler = new UserHandler($conn);
+// try {
+//     // Create an instance of the UserHandler class
+//     $userHandler = new UserHandler($conn);
 
-    // Fetch users using the fetchUsers method
-    $users = $userHandler->fetchUsers();
+//     // Fetch users using the fetchUsers method
+//     $users = $userHandler->fetchUsers();
 
-    // Debug or display users (for testing purposes)
-    // print_r($users);
-} catch (Exception $e) {
-    // Handle exceptions (e.g., log errors, display friendly messages, etc.)
-    echo "Error: " . $e->getMessage();
-}
+//     // Debug or display users (for testing purposes)
+//     // print_r($users);
+// } catch (Exception $e) {
+//     // Handle exceptions (e.g., log errors, display friendly messages, etc.)
+//     echo "Error: " . $e->getMessage();
+// }
 ?>

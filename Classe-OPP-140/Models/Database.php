@@ -6,25 +6,33 @@ use Dotenv\Dotenv;
 class Database {
     private $conn; // Database connection instance
 
-    //Construtor para inicializar a conexão com o banco de dados
+    // Constructor to initialize the database connection
     public function __construct($envPath) {
         $this->loadEnvironment($envPath); // Load environment variables
         $this->connect(); // Establish the database connection
     }
 
     private function loadEnvironment($path) {
+        echo "Loading environment from: " . $path . '/.env' . "<br>";
 
-        // echo "Loading environment from: " . $path . '/.env' . "<br>";
+        $path = '/home/felix/Classe-140/Classe-OPP-140';  // This should be the root of your project
+        $envFilePath = $path . '/.env';  // Correct the path
 
-        if (!file_exists($path . '/.env')) {
-            throw new Exception("Error: .env file not found in the specified path");
+        
+        // Check if .env file exists at the provided path
+        if (!file_exists($envFilePath)) {
+            throw new Exception("Error: .env file not found in the specified path: " . $envFilePath);
         }
 
-        // $dotenv = Dotenv::createImmutable(__DIR__);
+        // Load environment variables from .env file
         $dotenv = Dotenv::createImmutable($path);
-        // echo "Dotenv instance created<br>";
-
         $dotenv->load();
+
+        echo 'DB_HOST: ' . getenv('DB_HOST') . '<br>';
+        echo 'DB_USER: ' . getenv('DB_USER') . '<br>';
+        echo 'DB_PASSWORD: ' . getenv('DB_PASSWORD') . '<br>';
+        echo 'DB_NAME: ' . getenv('DB_NAME') . '<br>';
+
 
         // Debug: verifica todas as variáveis ​​carregadas
         // echo "Environment variables loaded now:<br>";
@@ -49,14 +57,14 @@ class Database {
     
     private function connect() {
         $servername = $_ENV['DB_HOST'];  
-        $username = $_ENV['DB_USER'];    
-        $password = $_ENV['DB_PASS'];   
-        $dbname = $_ENV['DB_DATA'];     
+        $username = $_ENV['DB_USERNAME'];    
+        $password = $_ENV['DB_PASSWORD'];   
+        $dbname = $_ENV['DB_DATABASE'];     
     
         // echo "Connecting with username named: $username<br>";
     
         try {
-            $conn = new mysqli($host, $username, $password, $dbname);
+            $conn = new mysqli($servername, $username, $password, $dbname);
             if ($conn->connect_error) {
                 throw new Exception("Connection failed: " . $conn->connect_error);
             }
@@ -67,8 +75,8 @@ class Database {
 
     public function createDatabase() {
         $servername = $_ENV['DB_HOST'];  
-        $username = $_ENV['DB_USER'];    
-        $password = $_ENV['DB_PASS'];   
+        $username = $_ENV['DB_USERNAME'];    
+        $password = $_ENV['DB_PASSWORD'];   
         
         // Estabelece conexão sem selecionar o banco de dados para criá-la
         $conn = new mysqli($servername, $username, $password);
@@ -77,7 +85,7 @@ class Database {
             throw new Exception("Connection failed: " . $conn->connect_error);
         }
     
-        $sql = "CREATE DATABASE IF NOT EXISTS " . $_ENV['DB_DATA'];
+        $sql = "CREATE DATABASE IF NOT EXISTS " . $_ENV['DB_DATABASE'];
     
         // echo "Executing SQL query: $sql<br>";
     
@@ -92,23 +100,29 @@ class Database {
     
 
     public function createTables() {
-        
-        //Utiliza a instância de conexão com o banco de dados selecionado
+        // Check if the connection is null
+        if ($this->conn === null) {
+            throw new Exception("Database connection not established.");
+        }
+    
+        // Use the class property directly
         $conn = $this->conn;
-
+    
         $sql = "CREATE TABLE IF NOT EXISTS Users (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     email VARCHAR(255) NOT NULL,
                     password VARCHAR(255) NOT NULL,
                     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )";
-
+    
+        // Check if query execution was successful
         if ($conn->query($sql) === TRUE) {
             // echo "Table 'Users' created successfully or already exists.<br>";
         } else {
             throw new Exception("Error creating table: " . $conn->error);
         }
     }
+    
 
     //Método para recuperar a instância da conexão
     public function getConnection() {

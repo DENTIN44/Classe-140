@@ -1,10 +1,24 @@
 
 <?php
-require_once 'Models/Database.php';  // Include the controller
-require_once 'Controllers/UserRegistration.php';  // Include the controller
+require_once 'Models/Database.php';  // Include the database connection
+require_once 'Controllers/UserRegistration.php';  // Include the UserRegistration controller
+require_once 'Controllers/UserController.php';  // Include the UserController
 
-$registerController = new RegisterController($conn);
-$registerController->handleRegistration($email, $password);
+// Handle form submission for user registration
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $password = isset($_POST['password']) ? $_POST['password'] : '';
+
+    // Create an instance of RegisterController and register the user
+    $registerController = new RegisterController($conn);
+    $registerController->handleRegistration($email, $password);
+}
+
+var_dump($_ENV);
+
+
+// $userController = new UserController($conn);
+// $users = $userController->index();  
 ?>
 
 <!DOCTYPE html>

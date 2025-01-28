@@ -1,12 +1,3 @@
-<?php
-// Include necessary files for user data and header
-// require 'Controllers/UserController.php';
-require 'header.php';
-
-// Fetch users from the UserController
-// $userController = new UserController($conn);
-// $users = $userController->index();
-// ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">

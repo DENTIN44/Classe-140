@@ -43,23 +43,26 @@ class UserRegistration {
 }
 
 // Usage example
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Get the email and password from the form
-    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $password = isset($_POST['password']) ? $_POST['password'] : '';
+// if ($_SERVER["REQUEST_METHOD"] === "POST") {
+//     // Get the email and password from the form
+//     $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+//     $password = isset($_POST['password']) ? $_POST['password'] : '';
 
-    try {
-        // Create an instance of the UserRegistration class
-        $userRegistration = new UserRegistration($conn);
+//     try {
+//         // Create an instance of the UserRegistration class
+//         $userRegistration = new UserRegistration($conn);
 
-        // Register the user
-        $userRegistration->registerUser($email, $password);
-    } catch (Exception $e) {
-        // Handle exceptions (e.g., log errors, display user-friendly messages, etc.)
-        echo "Error: " . $e->getMessage();
-    }
+//         // Register the user
+//         $userRegistration->registerUser($email, $password);
+//     } catch (Exception $e) {
+//         // Handle exceptions (e.g., log errors, display user-friendly messages, etc.)
+//         echo "Error: " . $e->getMessage();
+//     }
+// }
+
+// Close the database connection if it exists
+if (isset($conn) && $conn !== null) {
+    $conn->close();
 }
 
-// Close the database connection
-$conn->close();
 ?>
