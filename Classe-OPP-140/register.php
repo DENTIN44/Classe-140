@@ -6,8 +6,8 @@ class UserRegistration {
     private $conn; // Private property to hold the database connection
 
     // Constructor to initialize the database connection
-    public function __construct($dbConnection) {
-        $this->conn = $dbConnection;
+    public function __construct($conn) {
+        $this->conn = $conn;
     }
 
     // Method to register a new user

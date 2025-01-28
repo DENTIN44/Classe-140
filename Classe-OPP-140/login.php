@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $registerController->handleRegistration($email, $password);
 }
 
-var_dump($_ENV);
+// var_dump($_ENV);
 
 
 // $userController = new UserController($conn);

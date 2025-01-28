@@ -1,6 +1,6 @@
 <?php
 
-require_once 'UserController.php';  // Make sure this file includes the UserRegistration class
+require_once 'register.php';  // Make sure this file includes the UserRegistration class
 
 class RegisterController {
     private $userRegistration;

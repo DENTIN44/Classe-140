@@ -68,8 +68,8 @@ class UserHandler {
     private $conn; // Private property to hold the database connection
 
     // Constructor to initialize the database connection
-    public function __construct($dbConnection) {
-        $this->conn = $dbConnection;
+    public function __construct($conn) {
+        $this->conn = $conn;
     }
 
     // Method to fetch all users from the database
@@ -115,8 +115,8 @@ try {
 class User {
     private $conn;
 
-    public function __construct($dbConnection) {
-        $this->conn = $dbConnection;
+    public function __construct($conn) {
+        $this->conn = $conn;
     }
 
     // Fetch user by ID
@@ -192,8 +192,8 @@ class UserManager {
     private $conn; // Private property to hold the database connection
 
     // Constructor to initialize the database connection
-    public function __construct($dbConnection) {
-        $this->conn = $dbConnection;
+    public function __construct($conn) {
+        $this->conn = $conn;
     }
 
     // Method to delete a user by ID

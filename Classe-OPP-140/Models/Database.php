@@ -13,11 +13,11 @@ class Database {
     }
 
     private function loadEnvironment($path) {
-        echo "Loading environment from: " . $path . '/.env' . "<br>";
-
-        $path = '/home/felix/Classe-140/Classe-OPP-140';  // This should be the root of your project
+        
+        $path = '/home/gabriel/Desktop/Classe-140/Classe-OPP-140';  // This should be the root of your project
         $envFilePath = $path . '/.env';  // Correct the path
-
+        
+        echo "Loading environment from: " . $path . '/.env' . "<br>";
         
         // Check if .env file exists at the provided path
         if (!file_exists($envFilePath)) {
@@ -28,10 +28,10 @@ class Database {
         $dotenv = Dotenv::createImmutable($path);
         $dotenv->load();
 
-        echo 'DB_HOST: ' . getenv('DB_HOST') . '<br>';
-        echo 'DB_USER: ' . getenv('DB_USER') . '<br>';
-        echo 'DB_PASSWORD: ' . getenv('DB_PASSWORD') . '<br>';
-        echo 'DB_NAME: ' . getenv('DB_NAME') . '<br>';
+        echo 'DB_HOST: ' . $_ENV['DB_HOST'] . '<br>';
+        echo 'DB_USERNAME: ' . $_ENV['DB_USERNAME'] . '<br>';
+        echo 'DB_PASSWORD: ' . $_ENV['DB_PASSWORD'] . '<br>';
+        echo 'DB_DATABASE: ' . $_ENV['DB_DATABASE'] . '<br>';
 
 
         // Debug: verifica todas as variáveis ​​carregadas
@@ -69,7 +69,7 @@ class Database {
                 throw new Exception("Connection failed: " . $conn->connect_error);
             }
         } catch (Exception $e) {
-            die("Database connection failed: " . $e->getMessage());
+            die("Database connection falhou: " . $e->getMessage());
         }
     }
 
@@ -87,10 +87,10 @@ class Database {
     
         $sql = "CREATE DATABASE IF NOT EXISTS " . $_ENV['DB_DATABASE'];
     
-        // echo "Executing SQL query: $sql<br>";
+        echo "Executing SQL query: $sql<br>";
     
         if ($conn->query($sql) === TRUE) {
-            // echo "Database created successfully or already exists.<br>";
+            echo "Database created successfully or already exists.<br>";
         } else {
             throw new Exception("Error creating database: " . $conn->error);
         }
@@ -117,12 +117,20 @@ class Database {
     
         // Check if query execution was successful
         if ($conn->query($sql) === TRUE) {
-            // echo "Table 'Users' created successfully or already exists.<br>";
+            echo "Table 'Users' created successfully or already exists.<br>";
         } else {
             throw new Exception("Error creating table: " . $conn->error);
         }
     }
     
+    // Method to check if the connection exists
+    public function isConnected() {
+        if ($this->conn && $this->conn->ping()) {
+            return true; // The connection is alive
+        }
+        return false; // The connection is not alive or does not exist
+    }
+
 
     //Método para recuperar a instância da conexão
     public function getConnection() {
@@ -137,22 +145,33 @@ class Database {
     }
 }
 
-try {
-    
-    // Instancia a classe Database com o caminho para o arquivo .env
-    $database = new Database(__DIR__);
-    $conn = $database->getConnection();
-    
-    // Cria o banco de dados se ele não existir
-    $database->createDatabase();
+// Usage
+$database = new Database('/home/gabriel/Desktop/Classe-140/Classe-OPP-140/.env');  // Pass the correct path to your .env file
 
-    // Cria as tabelas se elas não existirem
-    $database->createTables();
-
-    // Depuração: remova o comentário para verificar a conexão
-    // var_dump($conn);
-
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+if ($database->isConnected()) {
+    echo "Connection is successful and alive.";
+} else {
+    echo "Connection failed or is no longer alive.";
 }
+
+
+// try {
+    
+//     // Instancia a classe Database com o caminho para o arquivo .env
+//     $database = new Database ('/home/gabriel/Desktop/Classe-140/Classe-OPP-140');
+//     ;
+//     $conn = $database->getConnection();
+    
+//     // Cria o banco de dados se ele não existir
+//     $database->createDatabase();
+
+//     // Cria as tabelas se elas não existirem
+//     $database->createTables();
+
+//     // Depuração: remova o comentário para verificar a conexão
+//     // var_dump($conn);
+
+// } catch (Exception $e) {
+//     echo "Error: " . $e->getMessage();
+// }
 ?>
