@@ -1,6 +1,6 @@
 <?php
 
-require_once '/home/felix/Classe-140/Classe-OPP-140/vendor/autoload.php';  
+require_once '/home/gabriel/Desktop/Classe-140/Classe-OPP-140/vendor/autoload.php';  
 use Dotenv\Dotenv;
 
 class Database {
