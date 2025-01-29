@@ -1,5 +1,5 @@
 <?php
-require_once 'Database.php'; // Include the database connection file
+require_once 'Database.php';
 
 // Define a class to handle user registration
 class UserRegistration {
@@ -33,35 +33,22 @@ class UserRegistration {
             throw new Exception("Execution failed: " . $stmt->error);
         }
 
+        // Check if any rows were affected
+        if ($stmt->affected_rows > 0) {
+            echo "User registered successfully.";
+        } else {
+            echo "No rows affected. Check the query or data.";
+        }
+
+
         // Close the statement
         $stmt->close();
 
         // Redirect after successful registration
-        header("Location: index.php");
+        header("Location: login.php");
         exit; // Ensure the script stops after redirect
     }
 }
-
-// Usage example
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Get the email and password from the form
-    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $password = isset($_POST['password']) ? $_POST['password'] : '';
-
-    try {
-        // Create an instance of the UserRegistration class
-        $userRegistration = new UserRegistration($conn);
-
-        // Register the user
-        $userRegistration->registerUser($email, $password);
-    } catch (Exception $e) {
-        // Handle exceptions (e.g., log errors, display user-friendly messages, etc.)
-        echo "Error: " . $e->getMessage();
-    }
-}
-
-// Close the database connection
-$conn->close();
 
 // Define a class to handle user-related operations
 class UserHandler {
@@ -74,6 +61,13 @@ class UserHandler {
 
     // Method to fetch all users from the database
     public function fetchUsers() {
+
+        if ($this->conn === null) {
+            die('Database connection not established.');
+        } else {
+            echo 'Connection establishedsss';
+        }
+        
         // SQL query to select all users ordered by creation date in descending order
         $sql = "SELECT * FROM Users ORDER BY createdAt DESC";
         
@@ -82,6 +76,13 @@ class UserHandler {
 
         // Initialize an empty array to store the users
         $users = [];
+
+        // Check if there was an error with the query
+        if ($result === false) {
+            // If there's an error with the query, you can log or echo the error
+            echo "SQL Error: " . $this->conn->error;
+            return $users; // Return an empty array on error
+        }
 
         // Check if there are any rows in the result
         if ($result->num_rows > 0) {
@@ -93,22 +94,8 @@ class UserHandler {
 
         // Return the array of users
         return $users;
+
     }
-}
-
-// Usage example
-try {
-    // Create an instance of the UserHandler class
-    $userHandler = new UserHandler($conn);
-
-    // Fetch users using the fetchUsers method
-    $users = $userHandler->fetchUsers();
-
-    // Debug or display users (for testing purposes)
-    // print_r($users);
-} catch (Exception $e) {
-    // Handle exceptions (e.g., log errors, display friendly messages, etc.)
-    echo "Error: " . $e->getMessage();
 }
 
 // User class to handle user-related operations
@@ -185,7 +172,7 @@ try {
 }
 
 // Close the database connection
-$conn->close();
+// $conn->close();
 
 // Define a class to handle user deletion
 class UserManager {
@@ -247,6 +234,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
 }
 
 // Close the database connection
-$conn->close();
+// $conn->close();
 
 ?>
