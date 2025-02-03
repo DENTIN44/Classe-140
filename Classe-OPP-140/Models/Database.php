@@ -136,19 +136,19 @@ class Database {
             throw new Exception("Database connection not established or is closed.");
         }
     
-        $sql = "CREATE TABLE IF NOT EXISTS Users (
+        // SQL statement to create the 'services' table
+        $sql = "CREATE TABLE IF NOT EXISTS services (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    email VARCHAR(255) NOT NULL,
-                    password VARCHAR(255) NOT NULL,
-                    resetPasswordToken VARCHAR(255) DEFAULT NULL,
-                    resetPasswordExpires DATETIME DEFAULT NULL,
+                    name VARCHAR(255) NOT NULL,
+                    description TEXT NOT NULL,
+                    price DECIMAL(10, 2) NOT NULL,
                     createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                 )";
     
         // Check if query execution was successful
         if ($this->conn->query($sql) === TRUE) {
-            // echo "Table 'Users' created successfully or already exists.<br>";
+            // echo "Table 'services' created successfully or already exists.<br>";
         } else {
             throw new Exception("Error creating table: " . $this->conn->error);
         }

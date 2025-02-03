@@ -59,49 +59,82 @@ class ServiceHandler {
     }
 
     // Method to fetch all services or a single service by ID
-    public function fetchServices($serviceId = null) {
-        if ($this->conn === null) {
-            die('Database connection not established.');
+    // Method to fetch all services or a single service by ID or search term
+public function fetchServices($serviceId = null, $search = null) {
+    if ($this->conn === null) {
+        die('Database connection not established.');
+    }
+
+    if ($serviceId === null && $search === null) {
+        // SQL query to select all services ordered by creation date in descending order
+        $sql = "SELECT * FROM services ORDER BY createdAt DESC";
+        $result = $this->conn->query($sql);
+
+        // Initialize an empty array to store the services
+        $services = [];
+
+        // Check if there was an error with the query
+        if ($result === false) {
+            echo "SQL Error: " . $this->conn->error;
+            return $services; // Return an empty array on error
         }
 
-        if ($serviceId === null) {
-            // SQL query to select all services ordered by creation date in descending order
-            $sql = "SELECT * FROM services ORDER BY created_at DESC";
-            $result = $this->conn->query($sql);
+        // Loop through each row and add it to the services array
+        while ($row = $result->fetch_assoc()) {
+            $services[] = $row;
+        }
+
+        return $services; // Return the array of services
+    } elseif ($serviceId !== null) {
+        // SQL query to select a service by ID
+        $sql = "SELECT * FROM services WHERE id = ?";
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("i", $serviceId);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                return $result->fetch_assoc(); // Return service data if found
+            } else {
+                return null; // Return null if no service found
+            }
+        } else {
+            throw new Exception("Error preparing the statement: " . $this->conn->error);
+        }
+    } else {
+        // SQL query to select services by name or first letter
+        $sql = "SELECT * FROM services WHERE name LIKE ?";
+        if ($search) {
+            // If search is a single letter, use LIKE with the first letter
+            if (strlen($search) == 1) {
+                $search = $search . '%'; // Filter by the first letter of the service name
+            } else {
+                $search = '%' . $search . '%'; // Filter by service name containing the search term
+            }
+        } else {
+            $search = '%'; // No search, return all services
+        }
+
+        if ($stmt = $this->conn->prepare($sql)) {
+            $stmt->bind_param("s", $search);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
             // Initialize an empty array to store the services
             $services = [];
-
-            // Check if there was an error with the query
-            if ($result === false) {
-                echo "SQL Error: " . $this->conn->error;
-                return $services; // Return an empty array on error
-            }
 
             // Loop through each row and add it to the services array
             while ($row = $result->fetch_assoc()) {
                 $services[] = $row;
             }
 
-            return $services; // Return the array of services
+            return $services; // Return the array of filtered services
         } else {
-            // SQL query to select a service by ID
-            $sql = "SELECT * FROM services WHERE id = ?";
-            if ($stmt = $this->conn->prepare($sql)) {
-                $stmt->bind_param("i", $serviceId);
-                $stmt->execute();
-                $result = $stmt->get_result();
-
-                if ($result->num_rows > 0) {
-                    return $result->fetch_assoc(); // Return service data if found
-                } else {
-                    return null; // Return null if no service found
-                }
-            } else {
-                throw new Exception("Error preparing the statement: " . $this->conn->error);
-            }
+            throw new Exception("Error preparing the statement: " . $this->conn->error);
         }
     }
+}
+
 
     // Update service by ID
     public function updateService($serviceId, $name, $description, $price) {

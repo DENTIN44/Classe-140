@@ -140,6 +140,11 @@ try {
 
     </style>
 
+<!-- Search form for services -->
+<input type="text" id="search-input" placeholder="Search for a service..." />
+
+<!-- Displaying results -->
+<div id="services-list"></div>
 <div class="form-group">
 <a href="index.php">Back to Home</a>
 </div>
@@ -193,7 +198,8 @@ try {
     
     <div id="overlay" onclick="closeModal()"></div>
     <div id="descriptionModal"></div>
-
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function showFullDescription(description) {
             const modal = document.getElementById('descriptionModal');
@@ -208,4 +214,22 @@ try {
             document.getElementById('descriptionModal').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
         }
+
+        $(document).ready(function() {
+        $('#search-input').on('keyup', function() {
+            var searchTerm = $(this).val();
+
+            // Make AJAX request to the server with the search term
+            $.ajax({
+                url: 'your-php-file.php', // Replace with your PHP file
+                method: 'GET',
+                data: { search: searchTerm },
+                success: function(response) {
+                    // Display the filtered services
+                    $('#services-list').html(response);
+                }
+            });
+        });
+    });
+
     </script>
