@@ -1,8 +1,7 @@
 <?php
 require_once 'Database.php';
 
-// Define a class to handle user registration
-class UserRegistration {
+class ServiceRegistration {
     private $conn; // Private property to hold the database connection
 
     // Constructor to initialize the database connection
@@ -10,23 +9,25 @@ class UserRegistration {
         $this->conn = $conn;
     }
 
-    // Method to register a new user
-    public function registerUser($email, $password) {
-        // Hash the password
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    // Method to register a new service
+    public function registerService($name, $description, $price) {
+        // Validate input
+        if (empty($name) || empty($description) || empty($price)) {
+            throw new Exception("All fields are required.");
+        }
 
-        if (!$this->conn) {
-            die("Database connection not established.");
+        if (!is_numeric($price) || $price <= 0) {
+            throw new Exception("Price must be a positive number.");
         }
 
         // Prepare the SQL statement
-        $stmt = $this->conn->prepare("INSERT INTO Users (email, password) VALUES (?, ?)");
+        $stmt = $this->conn->prepare("INSERT INTO services (name, description, price) VALUES (?, ?, ?)");
         if ($stmt === false) {
             throw new Exception("Prepare failed: " . $this->conn->error);
         }
 
         // Bind parameters
-        $stmt->bind_param("ss", $email, $hashedPassword);
+        $stmt->bind_param("ssd", $name, $description, $price);
 
         // Execute the statement and check for success
         if (!$stmt->execute()) {
@@ -35,23 +36,21 @@ class UserRegistration {
 
         // Check if any rows were affected
         if ($stmt->affected_rows > 0) {
-            echo "User registered successfully.";
+            echo "Service registered successfully.";
         } else {
             echo "No rows affected. Check the query or data.";
         }
-
 
         // Close the statement
         $stmt->close();
 
         // Redirect after successful registration
-        header("Location: login.php");
+        header("Location: register.php");
         exit; // Ensure the script stops after redirect
     }
 }
 
-// Define a class to handle user-related operations
-class UserHandler {
+class ServiceHandler {
     private $conn; // Private property to hold the database connection
 
     // Constructor to initialize the database connection
@@ -59,76 +58,66 @@ class UserHandler {
         $this->conn = $conn;
     }
 
-    // Method to fetch all users from the database
-    public function fetchUsers() {
-
+    // Method to fetch all services or a single service by ID
+    public function fetchServices($serviceId = null) {
         if ($this->conn === null) {
             die('Database connection not established.');
-        } else {
-            echo 'Connection establishedsss';
-        }
-        
-        // SQL query to select all users ordered by creation date in descending order
-        $sql = "SELECT * FROM Users ORDER BY createdAt DESC";
-        
-        // Execute the query and store the result
-        $result = $this->conn->query($sql);
-
-        // Initialize an empty array to store the users
-        $users = [];
-
-        // Check if there was an error with the query
-        if ($result === false) {
-            // If there's an error with the query, you can log or echo the error
-            echo "SQL Error: " . $this->conn->error;
-            return $users; // Return an empty array on error
         }
 
-        // Check if there are any rows in the result
-        if ($result->num_rows > 0) {
-            // Loop through each row and add it to the users array
+        if ($serviceId === null) {
+            // SQL query to select all services ordered by creation date in descending order
+            $sql = "SELECT * FROM services ORDER BY created_at DESC";
+            $result = $this->conn->query($sql);
+
+            // Initialize an empty array to store the services
+            $services = [];
+
+            // Check if there was an error with the query
+            if ($result === false) {
+                echo "SQL Error: " . $this->conn->error;
+                return $services; // Return an empty array on error
+            }
+
+            // Loop through each row and add it to the services array
             while ($row = $result->fetch_assoc()) {
-                $users[] = $row;
+                $services[] = $row;
             }
-        }
 
-        // Return the array of users
-        return $users;
-
-    }
-}
-
-// User class to handle user-related operations
-class User {
-    private $conn;
-
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
-
-    // Fetch user by ID
-    public function fetchUser($userId) {
-        $sql = "SELECT * FROM Users WHERE id = ?";
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("i", $userId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            if ($result->num_rows > 0) {
-                return $result->fetch_assoc();
-            } else {
-                return null; // Return null if no user found
-            }
+            return $services; // Return the array of services
         } else {
-            throw new Exception("Error preparing the statement: " . $this->conn->error);
+            // SQL query to select a service by ID
+            $sql = "SELECT * FROM services WHERE id = ?";
+            if ($stmt = $this->conn->prepare($sql)) {
+                $stmt->bind_param("i", $serviceId);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    return $result->fetch_assoc(); // Return service data if found
+                } else {
+                    return null; // Return null if no service found
+                }
+            } else {
+                throw new Exception("Error preparing the statement: " . $this->conn->error);
+            }
         }
     }
 
-    // Update user by ID
-    public function updateUser($userId, $email) {
-        $sql = "UPDATE Users SET email = ? WHERE id = ?";
+    // Update service by ID
+    public function updateService($serviceId, $name, $description, $price) {
+        // Validate input
+        if (empty($name) || empty($description) || empty($price)) {
+            throw new Exception("All fields are required.");
+        }
+
+        if (!is_numeric($price) || $price <= 0) {
+            throw new Exception("Price must be a positive number.");
+        }
+
+        // Prepare the SQL statement
+        $sql = "UPDATE services SET name = ?, description = ?, price = ? WHERE id = ?";
         if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("si", $email, $userId);
+            $stmt->bind_param("ssdi", $name, $description, $price, $serviceId);
             if ($stmt->execute()) {
                 return true;
             } else {
@@ -138,70 +127,30 @@ class User {
             throw new Exception("Error preparing the statement: " . $this->conn->error);
         }
     }
-}
 
-// Main logic
-try {
-    $userHandler = new User($conn); // Pass the database connection to the User class
-    $email = '';
-    $idReceived = 0;
-
-    if (isset($_GET['user_id'])) {
-        $idReceived = intval($_GET['user_id']);
-        $user = $userHandler->fetchUser($idReceived);
-
-        if ($user) {
-            $email = $user['email'];
-        } else {
-            echo "User not found.";
-            exit;
+    // Method to delete a service by ID
+    public function deleteService($serviceId) {
+        if ($this->conn === null) {
+            throw new Exception("Database connection not established.");
         }
-    }
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_user'])) {
-        $userId = intval($_POST['user_id']);
-        $email = $_POST['email'];
-
-        if ($userHandler->updateUser($userId, $email)) {
-            header('Location: index.php');
-            exit;
-        }
-    }
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
-}
-
-// Close the database connection
-// $conn->close();
-
-// Define a class to handle user deletion
-class UserManager {
-    private $conn; // Private property to hold the database connection
-
-    // Constructor to initialize the database connection
-    public function __construct($conn) {
-        $this->conn = $conn;
-    }
-
-    // Method to delete a user by ID
-    public function deleteUser($userId) {
         // Prepare the SQL DELETE statement
-        $sql = "DELETE FROM Users WHERE id = ?";
+        $sql = "DELETE FROM services WHERE id = ?";
 
         // Prepare the statement
         if ($stmt = $this->conn->prepare($sql)) {
-            // Bind the user ID parameter
-            $stmt->bind_param("i", $userId);
+            // Bind the service ID parameter
+            $stmt->bind_param("i", $serviceId);
 
             // Execute the statement
             if ($stmt->execute()) {
                 // Check if any rows were affected
                 if ($stmt->affected_rows > 0) {
-                    echo "User with ID $userId has been deleted.";
-                    header('Location: index.php'); // Redirect after successful deletion
+                    echo "Service with ID $serviceId has been deleted.";
+                    header('Location: services-list.php'); // Redirect after successful deletion
                     exit;
                 } else {
-                    echo "No user found with ID $userId.";
+                    echo "No service found with ID $serviceId.";
                 }
             } else {
                 throw new Exception("Error executing the query: " . $stmt->error);
@@ -213,24 +162,6 @@ class UserManager {
             throw new Exception("Error preparing the statement: " . $this->conn->error);
         }
     }
-}
-
-// Check if the form is submitted
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['user_id'])) {
-    $userId = intval($_POST['user_id']); // Convert user ID to an integer to prevent SQL injection
-
-    try {
-        // Create an instance of the UserManager class
-        $userManager = new UserManager($conn);
-
-        // Call the deleteUser method
-        $userManager->deleteUser($userId);
-    } catch (Exception $e) {
-        // Handle exceptions (e.g., log errors, display user-friendly messages)
-        echo "Error: " . $e->getMessage();
-    }
-} else {
-    echo "Invalid request.";
 }
 
 // Close the database connection

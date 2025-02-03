@@ -1,29 +1,27 @@
-html {
-  overflow-x: hidden; /* Prevent horizontal scrollbar */
-}
+
 
 html, body {
   margin: 0;
-  height: 100%;
   font-family: Arial, sans-serif;
   width: 100%;
-  
-}
-
-body {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+header {
+  height: 10%;
 }
 
 #content {
   padding: 0;
+  margin: 0;
 }
 
 nav {
   width: 100%;
-  height: 60px;
-  padding: 0px;
+  padding: 20px 0px 20px 0px;
   background: #333;
   display: flex;
   align-items: center;
@@ -84,10 +82,23 @@ nav ul li a:hover {
   padding: 10px;
 }
 
-.main-content {
+#content {
+  flex: 10;
   display: flex;
-  gap: 0px;
-  padding: 0px;
+  flex-direction: column;
+}
+
+.main-content {
+  flex-grow: 0; /* Pushes the footer down */
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  
 }
 
 section, aside {
@@ -176,16 +187,13 @@ p {
 
 .footer-container {
   display: flex;
-  /* flex-direction: column; */
   width: 100%;
   height: auto;
   padding-bottom: 0;
   background: black;
   color: #fff;
   gap: 25%;
-  /* position: relative; */
   flex-wrap: wrap;
-  /* text-align: center; */
   justify-content: center;
   font-family: Arial, Helvetica, sans-serif;
 }

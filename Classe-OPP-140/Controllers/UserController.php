@@ -2,24 +2,24 @@
 require_once 'Models/User.php';
 
 
-class UserController {
-    private $userHandler;
+class ServiceController {
+    private $serviceHandler;
 
     public function __construct($conn) {
-        $this->userHandler = new UserHandler($conn);
+        $this->serviceHandler = new ServiceHandler($conn);
     }
 
     public function index() {
-        return $this->userHandler->fetchUsers();
+        return $this->serviceHandler->fetchservices();
     }
 }
 
 class RegisterController {
-    private $userRegistration;
+    private $serviceRegistration;
 
     public function __construct($conn) {
-        // Instantiate the UserRegistration model with the database connection
-        $this->userRegistration = new UserRegistration($conn);
+        // Instantiate the ServiceRegistration model with the database connection
+        $this->serviceRegistration = new ServiceRegistration($conn);
     }
 
     // Method to handle user registration
@@ -36,10 +36,10 @@ class RegisterController {
             }
 
             // Call the registerUser method from the UserRegistration model
-            $this->userRegistration->registerUser($email, $password);
+            $this->serviceRegistration->registerService($email, $password);
 
             // Optionally, redirect to a success page
-            header("Location: login.php");
+            header("Location: register.php");
             exit;
         } catch (Exception $e) {
             // Catch and handle exceptions if any occur during registration

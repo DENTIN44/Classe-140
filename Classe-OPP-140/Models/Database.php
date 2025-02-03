@@ -49,23 +49,23 @@ class Database {
         $envFilePath = $path . '/.env';  // Correct path to .env file
         
         // Output the full path to the .env file
-        echo "Loading environment from: " . $envFilePath . "<br>";
+        // echo "Loading environment from: " . $envFilePath . "<br>";
     
         // Check if the .env file exists using the correct variable
-        if (file_exists($envFilePath)) {
-            echo 'Found the .env file!<br>';
-        } else {
-            echo 'Could not find the .env file.<br>';
-        }
+        // if (file_exists($envFilePath)) {
+        //     echo 'Found the .env file!<br>';
+        // } else {
+        //     echo 'Could not find the .env file.<br>';
+        // }
     
         // Load environment variables from .env file
         $dotenv = Dotenv::createImmutable($path);
         $dotenv->load();
     
         // Debug output of environment variables
-        echo 'DB_HOST: ' . $_ENV['DB_HOST'] . '<br>';
-        echo 'DB_USERNAME: ' . $_ENV['DB_USERNAME'] . '<br>';
-        echo 'DB_DATABASE: ' . $_ENV['DB_DATABASE'] . '<br>';
+        // echo 'DB_HOST: ' . $_ENV['DB_HOST'] . '<br>';
+        // echo 'DB_USERNAME: ' . $_ENV['DB_USERNAME'] . '<br>';
+        // echo 'DB_DATABASE: ' . $_ENV['DB_DATABASE'] . '<br>';
     
         // Debug: verifica todas as variáveis ​​carregadas
         // echo "Environment variables loaded now:<br>";
@@ -148,7 +148,7 @@ class Database {
     
         // Check if query execution was successful
         if ($this->conn->query($sql) === TRUE) {
-            echo "Table 'Users' created successfully or already exists.<br>";
+            // echo "Table 'Users' created successfully or already exists.<br>";
         } else {
             throw new Exception("Error creating table: " . $this->conn->error);
         }
@@ -167,9 +167,9 @@ class Database {
 // Usage
 $database = new Database(__DIR__ . '/../.env');  // This goes up one level to the root where the .env file is
 if ($database->isConnected()) {
-    echo "Connection is successful and alive.";
+    // echo "Connection is successful and alive.";
 } else {
-    echo "Connection failed or is no longer alive.";
+    // echo "Connection failed or is no longer alive.";
 }
 
 ?>
