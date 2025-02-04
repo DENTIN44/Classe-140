@@ -9,8 +9,14 @@ class ServiceController {
         $this->serviceHandler = new ServiceHandler($conn);
     }
 
+    // Existing method to fetch all services
     public function index() {
-        return $this->serviceHandler->fetchservices();
+        return $this->serviceHandler->fetchServices();
+    }
+
+    // New method to fetch services based on a search term
+    public function search($searchTerm) {
+        return $this->serviceHandler->searchServices($searchTerm);
     }
 }
 

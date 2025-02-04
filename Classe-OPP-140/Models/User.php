@@ -58,7 +58,6 @@ class ServiceHandler {
         $this->conn = $conn;
     }
 
-    // Method to fetch all services or a single service by ID
     // Method to fetch all services or a single service by ID or search term
 public function fetchServices($serviceId = null, $search = null) {
     if ($this->conn === null) {
@@ -135,6 +134,16 @@ public function fetchServices($serviceId = null, $search = null) {
     }
 }
 
+
+    // New method to fetch services based on a search term
+    public function searchServices($searchTerm) {
+        $sql = "SELECT * FROM services WHERE name LIKE :searchTerm OR description LIKE :searchTerm";
+        $stmt = $this->conn->prepare($sql);
+        $searchTerm = '%' . $searchTerm . '%';
+        $stmt->bindParam(':searchTerm', $searchTerm);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // Update service by ID
     public function updateService($serviceId, $name, $description, $price) {

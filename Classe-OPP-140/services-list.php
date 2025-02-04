@@ -221,7 +221,7 @@ try {
 
             // Make AJAX request to the server with the search term
             $.ajax({
-                url: 'your-php-file.php', // Replace with your PHP file
+                url: 'fetch-services.php', // Replace with your PHP file
                 method: 'GET',
                 data: { search: searchTerm },
                 success: function(response) {

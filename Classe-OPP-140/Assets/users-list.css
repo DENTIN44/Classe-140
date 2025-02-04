@@ -1,0 +1,115 @@
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 32px;
+            color: #444;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            height: auto;
+            border-collapse: collapse;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: orangered;
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:hover {
+            background-color: #f9c4a6;
+        }
+
+        th {
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: center;
+            
+        }
+
+        button {
+            background-color: orangered;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: darkred;
+        }
+
+        td form {
+            display: inline;
+        }
+
+        td {
+            vertical-align: middle;
+        }
+
+        tbody tr td:nth-child(3) {
+            display: -webkit-box;
+            max-width: 100px;
+            height: 20px; /* Limit the height to control the number of visible lines */
+            white-space: normal;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            -webkit-line-clamp: 2;
+            line-height: 1.2; /* Adjust line height for better spacing */
+            -webkit-box-orient: vertical;
+        }
+
+        /* Full Description Modal */
+        #descriptionModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+            max-width: 400px;
+            max-height: 300px;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+        }
