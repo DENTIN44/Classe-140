@@ -59,91 +59,121 @@ class ServiceHandler {
     }
 
     // Method to fetch all services or a single service by ID or search term
-public function fetchServices($serviceId = null, $search = null) {
-    if ($this->conn === null) {
-        die('Database connection not established.');
-    }
-
-    if ($serviceId === null && $search === null) {
-        // SQL query to select all services ordered by creation date in descending order
-        $sql = "SELECT * FROM services ORDER BY createdAt DESC";
-        $result = $this->conn->query($sql);
-
-        // Initialize an empty array to store the services
-        $services = [];
-
-        // Check if there was an error with the query
-        if ($result === false) {
-            echo "SQL Error: " . $this->conn->error;
-            return $services; // Return an empty array on error
+    public function fetchServices($serviceId = null, $search = null) {
+        if ($this->conn === null) {
+            die('Database connection not established.');
         }
 
-        // Loop through each row and add it to the services array
-        while ($row = $result->fetch_assoc()) {
-            $services[] = $row;
-        }
-
-        return $services; // Return the array of services
-    } elseif ($serviceId !== null) {
-        // SQL query to select a service by ID
-        $sql = "SELECT * FROM services WHERE id = ?";
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("i", $serviceId);
-            $stmt->execute();
-            $result = $stmt->get_result();
-
-            if ($result->num_rows > 0) {
-                return $result->fetch_assoc(); // Return service data if found
-            } else {
-                return null; // Return null if no service found
-            }
-        } else {
-            throw new Exception("Error preparing the statement: " . $this->conn->error);
-        }
-    } else {
-        // SQL query to select services by name or first letter
-        $sql = "SELECT * FROM services WHERE name LIKE ?";
-        if ($search) {
-            // If search is a single letter, use LIKE with the first letter
-            if (strlen($search) == 1) {
-                $search = $search . '%'; // Filter by the first letter of the service name
-            } else {
-                $search = '%' . $search . '%'; // Filter by service name containing the search term
-            }
-        } else {
-            $search = '%'; // No search, return all services
-        }
-
-        if ($stmt = $this->conn->prepare($sql)) {
-            $stmt->bind_param("s", $search);
-            $stmt->execute();
-            $result = $stmt->get_result();
+        if ($serviceId === null && $search === null) {
+            // SQL query to select all services ordered by creation date in descending order
+            $sql = "SELECT * FROM services ORDER BY createdAt DESC";
+            $result = $this->conn->query($sql);
 
             // Initialize an empty array to store the services
             $services = [];
+
+            // Check if there was an error with the query
+            if ($result === false) {
+                echo "SQL Error: " . $this->conn->error;
+                return $services; // Return an empty array on error
+            }
 
             // Loop through each row and add it to the services array
             while ($row = $result->fetch_assoc()) {
                 $services[] = $row;
             }
 
-            return $services; // Return the array of filtered services
+            return $services; // Return the array of services
+        } elseif ($serviceId !== null) {
+            // SQL query to select a service by ID
+            $sql = "SELECT * FROM services WHERE id = ?";
+            if ($stmt = $this->conn->prepare($sql)) {
+                $stmt->bind_param("i", $serviceId);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    return $result->fetch_assoc(); // Return service data if found
+                } else {
+                    return null; // Return null if no service found
+                }
+            } else {
+                throw new Exception("Error preparing the statement: " . $this->conn->error);
+            }
         } else {
-            throw new Exception("Error preparing the statement: " . $this->conn->error);
+            // SQL query to select services by name or first letter
+            $sql = "SELECT * FROM services WHERE name LIKE ?";
+            if ($search) {
+                // If search is a single letter, use LIKE with the first letter
+                if (strlen($search) == 1) {
+                    $search = $search . '%'; // Filter by the first letter of the service name
+                } else {
+                    $search = '%' . $search . '%'; // Filter by service name containing the search term
+                }
+            } else {
+                $search = '%'; // No search, return all services
+            }
+
+            if ($stmt = $this->conn->prepare($sql)) {
+                $stmt->bind_param("s", $search);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                // Initialize an empty array to store the services
+                $services = [];
+
+                // Loop through each row and add it to the services array
+                while ($row = $result->fetch_assoc()) {
+                    $services[] = $row;
+                }
+
+                return $services; // Return the array of filtered services
+            } else {
+                throw new Exception("Error preparing the statement: " . $this->conn->error);
+            }
         }
     }
-}
 
 
-    // New method to fetch services based on a search term
     public function searchServices($searchTerm) {
-        $sql = "SELECT * FROM services WHERE name LIKE :searchTerm OR description LIKE :searchTerm";
-        $stmt = $this->conn->prepare($sql);
-        $searchTerm = '%' . $searchTerm . '%';
-        $stmt->bindParam(':searchTerm', $searchTerm);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            // Return an empty list if the search term is empty
+            if (empty(trim($searchTerm))) {
+                return [];
+            }
+    
+            // Determine the search pattern based on the length of the search term
+            if (strlen($searchTerm) == 1) {
+                // If the search term is a single letter, search for services starting with that letter
+                $searchPattern = $searchTerm . '%';
+            } else {
+                // If the search term is more than one character, search for services containing the term
+                $searchPattern = '%' . $searchTerm . '%';
+            }
+    
+            // SQL query to select services by name or description
+            $sql = "SELECT * FROM services WHERE name LIKE ? OR description LIKE ?";
+            $stmt = $this->conn->prepare($sql);
+    
+            // Bind parameters and execute
+            $stmt->bind_param('ss', $searchPattern, $searchPattern);
+            $stmt->execute();
+    
+            // Fetch results
+            $result = $stmt->get_result();
+            $services = $result->fetch_all(MYSQLI_ASSOC);
+    
+            // Free result and return services
+            $stmt->close();
+            return $services;
+        } catch (Exception $e) {
+            echo "Error fetching services: " . $e->getMessage();
+            return [];
+        }
     }
+    
+    
+
 
     // Update service by ID
     public function updateService($serviceId, $name, $description, $price) {

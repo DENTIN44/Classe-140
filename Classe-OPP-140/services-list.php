@@ -1,4 +1,7 @@
+
 <?php
+//services-list.php
+
 require_once 'Controllers/UserController.php';  // Include the UserController
 
 try {
@@ -21,146 +24,36 @@ try {
 
 ?>
 
-<style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            margin: 0;
-            overflow-x: auto;
-            padding: 20px;
-        }
 
-        h2 {
-            text-align: center;
-            font-size: 32px;
-            color: #444;
-            margin-bottom: 20px;
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service List</title>
+    <link rel="stylesheet" href="Assets/service-list.css">
+</head>
+<body>
+    <!-- Search form for services -->
+    <input type="text" id="search-input" placeholder="Search for a service..." />
 
-        table {
-            width: 100%;
-            height: auto;
-            border-collapse: collapse;
-            margin: 0 auto;
-            background: #ffffff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
+    <!-- Displaying results -->
+    <div id="services-list"></div>
+    <div class="form-group">
+        <a href="index.php">Back to Home</a>
+    </div>
 
-        thead {
-            background: orangered;
-            color: white;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        tbody tr:hover {
-            background-color: #f9c4a6;
-        }
-
-        th {
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: center;
-            
-        }
-
-        button {
-            background-color: orangered;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        button:hover {
-            background-color: darkred;
-        }
-
-        td form {
-            display: inline;
-        }
-
-        td {
-            vertical-align: middle;
-        }
-
-        tbody tr td:nth-child(3) {
-            display: -webkit-box;
-            max-width: 100px;
-            height: 20px; /* Limit the height to control the number of visible lines */
-            white-space: normal;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            cursor: pointer;
-            -webkit-line-clamp: 2;
-            line-height: 1.2; /* Adjust line height for better spacing */
-            -webkit-box-orient: vertical;
-        }
-
-        /* Full Description Modal */
-        #descriptionModal {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            z-index: 1000;
-            max-width: 400px;
-            max-height: 300px;
-            overflow-y: auto;
-            border-radius: 8px;
-        }
-
-        #overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 999;
-        }
-
-    </style>
-
-<!-- Search form for services -->
-<input type="text" id="search-input" placeholder="Search for a service..." />
-
-<!-- Displaying results -->
-<div id="services-list"></div>
-<div class="form-group">
-<a href="index.php">Back to Home</a>
-</div>
-
-<h2>Latest Registered Services</h2>
+    <h2>Latest Registered Services</h2>
     <table>
         <thead>
             <tr>
-                <!-- You can add headers like "ID", "Email", etc. -->
                 <th>ID</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Price</th>
-                <th>Created_at</th>
-                <th>Updated_at</th>
-                <th>Actions</th> <!-- Explicit header for the buttons -->
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -176,8 +69,8 @@ try {
                 <td>" . htmlspecialchars($row['name'] ?? '') . "</td>
                 <td class='description-cell' onclick='showFullDescription(\"" . htmlspecialchars($row['description'] ?? '') . "\")'>" . htmlspecialchars($row['description'] ?? '') . "</td>
                 <td>" . htmlspecialchars($row['price'] ?? '') . "</td>
-                <td>" . htmlspecialchars($row['created_at'] ?? '') . "</td>
-                <td>" . htmlspecialchars($row['updated_at'] ?? '') . "</td>
+                <td>" . htmlspecialchars($row['createdAt'] ?? '') . "</td>
+                <td>" . htmlspecialchars($row['updatedAt'] ?? '') . "</td>
                 <td>
                     <!-- Form to delete the user -->
                     <form method='POST' action='delete.php' style='display:inline;'>
@@ -216,20 +109,21 @@ try {
         }
 
         $(document).ready(function() {
-        $('#search-input').on('keyup', function() {
-            var searchTerm = $(this).val();
+            $('#search-input').on('keyup', function() {
+                var searchTerm = $(this).val();
 
-            // Make AJAX request to the server with the search term
-            $.ajax({
-                url: 'fetch-services.php', // Replace with your PHP file
-                method: 'GET',
-                data: { search: searchTerm },
-                success: function(response) {
-                    // Display the filtered services
-                    $('#services-list').html(response);
-                }
+                // Make AJAX request to the server with the search term
+                $.ajax({
+                    url: 'fetch-services.php', // This will return the filtered services as table rows
+                    method: 'GET',
+                    data: { search: searchTerm },
+                    success: function(response) {
+                        // Overwrite the existing table body with the new response
+                        $('table tbody').html(response);
+                    }
+                });
             });
         });
-    });
-
     </script>
+</body>
+</html>
