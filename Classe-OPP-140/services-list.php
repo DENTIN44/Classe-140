@@ -69,8 +69,8 @@ try {
                 <td>" . htmlspecialchars($row['name'] ?? '') . "</td>
                 <td class='description-cell' onclick='showFullDescription(\"" . htmlspecialchars($row['description'] ?? '') . "\")'>" . htmlspecialchars($row['description'] ?? '') . "</td>
                 <td>" . htmlspecialchars($row['price'] ?? '') . "</td>
-                <td>" . htmlspecialchars($row['createdAt'] ?? '') . "</td>
-                <td>" . htmlspecialchars($row['updatedAt'] ?? '') . "</td>
+                <td>" . htmlspecialchars($row['created_at'] ?? '') . "</td>
+                <td>" . htmlspecialchars($row['updated_at'] ?? '') . "</td>
                 <td>
                     <!-- Form to delete the user -->
                     <form method='POST' action='delete.php' style='display:inline;'>

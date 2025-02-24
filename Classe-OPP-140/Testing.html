@@ -62,7 +62,9 @@
             </tbody>
         </table>
         </div>
-
+<br>
+<br>
+<br>
         <form class="d-flex flex-row align-items-center" role="form">
             <div class="form-group me-3">
               <label for="name" class="form-label me-2">Name</label>
@@ -84,8 +86,9 @@
           
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>
-          
-
+<br>
+<br>
+<br>
           <form class="row g-3">
             <div class="mb-3 row">
               <label for="firstname" class="col-sm-2 col-form-label">First Name</label>
@@ -101,7 +104,200 @@
               </div>
             </div>
           </form>
+<br>
+<br>
+<br>
+          <form role="form">
+            
+            <div class="mb-3">
+              <label for="name" class="form-label">Label</label>
+              <input type="text" class="form-control" id="name" placeholder="Text input">
+            </div>
           
+          </form>
+<br>
+<br>
+<br>
+          <form role="form">
+            
+            <div class="mb-3">
+              <label for="name" class="form-label">Text Area</label>
+              <textarea class="form-control" id="name" rows="3"></textarea>
+            </div>
+            
+          </form>
+<br>
+<br>
+<br>  
+        <label for="name">Example of Default Checkbox and radio button</label>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="option1">
+          <label class="form-check-label" for="option1">
+              Option 1
+          </label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="option2">
+          <label class="form-check-label" for="option2">
+              Option 2
+          </label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+          <label class="form-check-label" for="optionsRadios1">
+              Option 1
+          </label>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+          <label class="form-check-label" for="optionsRadios2">
+              Option 2 - selecting it will deselect option 1
+          </label>
+        </div>
+
+        <label for="name">Example of Inline Checkbox and radio button</label>
+
+        <div>
+          <label class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"> Option 1
+          </label>
+          
+          <label class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2"> Option 2
+          </label>
+          
+          <label class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3"> Option 3
+          </label>
+          
+          <label class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="optionsRadiosinline" id="optionsRadios3" value="option1" checked> Option 1
+          </label>
+          
+          <label class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="optionsRadiosinline" id="optionsRadios4" value="option2"> Option 2
+          </label>
+        </div>
+<br>
+<br>
+<br>
+        <form role="form">
+          
+          <div class="mb-3">
+            <label for="name" class="form-label">Select list</label>
+            
+            <select class="form-select" id="name">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+
+            <label for="multipleName" class="form-label">Multiple Select list</label>
+            
+            <select multiple class="form-select" id="multipleName">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+            
+          </div>
+        
+        </form>
+<br>
+<br>
+<br>
+        <form class="row g-3" role="form">
+          <div class="col-sm-2">
+            <label for="email" class="col-form-label">Email</label>
+          </div>
+          
+          <div class="col-sm-10">
+            <p class="form-control-plaintext">email@example.com</p>
+          </div>
+          
+          <div class="col-sm-2">
+            <label for="inputPassword" class="col-form-label">Password</label>
+          </div>
+          
+          <div class="col-sm-10">
+            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+          </div>
+        </form>
+<br>
+<br>
+<br>
+        <form class="row g-3" role="form">
+          <div class="col-sm-2">
+            <label for="focusedInput" class="col-form-label">Focused</label>
+          </div>
+          <div class="col-sm-10">
+            <input class="form-control" id="focusedInput" type="text" value="This is focused...">
+          </div>
+
+          <div class="col-sm-2">
+            <label for="disabledInput" class="col-form-label">Disabled</label>
+          </div>
+          <div class="col-sm-10">
+            <input class="form-control" id="disabledInput" type="text" placeholder="Disabled input here..." disabled>
+          </div>
+
+          <fieldset disabled>
+            <div class="col-sm-2">
+                <label for="disabledTextInput" class="col-form-label">
+                  Disabled input (Fieldset disabled)
+                </label>
+            </div>
+            <div class="col-sm-10">
+                <input type="text" id="disabledTextInput" class="form-control" placeholder="Disabled input">
+            </div>
+
+            <div class="col-sm-2">
+                <label for="disabledSelect" class="col-form-label">
+                  Disabled select menu (Fieldset disabled)
+                </label>
+            </div>
+            <div class="col-sm-10">
+                <select id="disabledSelect" class="form-select">
+                  <option>Disabled select</option>
+                </select>
+            </div>
+          </fieldset>
+
+          <div class="col-sm-2">
+            <label for="inputSuccess" class="col-form-label">Input with success</label>
+          </div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control is-valid" id="inputSuccess">
+          </div>
+
+          <div class="col-sm-2">
+            <label for="inputWarning" class="col-form-label">Input with warning</label>
+          </div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control is-warning" id="inputWarning">
+          </div>
+
+          <div class="col-sm-2">
+            <label for="inputError" class="col-form-label">Input with error</label>
+          </div>
+          <div class="col-sm-10">
+            <input type="text" class="form-control is-invalid" id="inputError">
+          </div>
+        </form>
+<br>
+<br>
+<br>
+        
+
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
