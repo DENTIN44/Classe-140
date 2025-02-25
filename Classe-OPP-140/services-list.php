@@ -34,14 +34,14 @@ try {
     <link rel="stylesheet" href="Assets/service-list.css">
 </head>
 <body>
-    <!-- Search form for services -->
-    <input type="text" id="search-input" placeholder="Search for a service..." />
-
     <!-- Displaying results -->
     <div id="services-list"></div>
     <div class="form-group">
         <a href="index.php">Back to Home</a>
     </div>
+    <br>
+    <!-- Search form for services -->
+    <input type="text" id="search-input" placeholder="Search for a service..." />
 
     <h2>Latest Registered Services</h2>
     <table>
@@ -53,6 +53,7 @@ try {
                 <th>Price</th>
                 <th>Created At</th>
                 <th>Updated At</th>
+                <th>Photos</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -71,6 +72,7 @@ try {
                 <td>" . htmlspecialchars($row['price'] ?? '') . "</td>
                 <td>" . htmlspecialchars($row['created_at'] ?? '') . "</td>
                 <td>" . htmlspecialchars($row['updated_at'] ?? '') . "</td>
+                <td>" . htmlspecialchars($row['photo'] ?? '') . "</td>
                 <td>
                     <!-- Form to delete the user -->
                     <form method='POST' action='delete.php' style='display:inline;'>

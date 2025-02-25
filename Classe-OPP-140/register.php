@@ -34,10 +34,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = $_POST['name'];
     $description = $_POST['description'];
     $price = $_POST['price'];
+    $photo = $_FILES['photo'];
 
     try {
         // Register the service
-        $serviceRegistration->registerService($name, $description, $price);
+        $serviceRegistration->registerService($name, $description, $price, $photo);
     } catch (Exception $e) {
         // Display error message if something goes wrong
         echo "Error: " . $e->getMessage();
@@ -191,40 +192,82 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <a href="index.php">Back to Home</a>
             </div>
 
-    <!-- Flash Messages -->
-    <?php if (isset($_SESSION['success'])): ?>
-        <div id="flash-success" class="alert alert-success">
-            <button onclick="closeAlert('flash-success')">×</button>
-            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
-        </div>
-    <?php endif; ?>
+            <div class="container">
+    <h2>Register Service</h2>
+    <form method="post" action="register.php" enctype="multipart/form-data">
+        <?php
+        session_start();
 
-    <?php if (isset($_SESSION['error'])): ?>
-        <div id="flash-error" class="alert alert-danger">
-            <button onclick="closeAlert('flash-error')">×</button>
-            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
-        </div>
-    <?php endif; ?>
+        // CSRF Token Generation
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
 
-    <div class="container">
-        <h2>Register Service</h2>
-        <form method="post" action="register.php">
-            <?php
-            session_start();
+        function old($key) {
+            return $_SESSION['old'][$key] ?? '';
+        }
 
-            if (empty($_SESSION['csrf_token'])) {
-                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        function error($key) {
+            return $_SESSION['errors'][$key] ?? null;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Validate CSRF Token
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                die("Invalid CSRF token.");
             }
 
-            function old($key) {
-                return $_SESSION['old'][$key] ?? '';
+            // Default photo if no upload occurs
+            $photo = 'default.jpg';
+
+            // Check if the photo field is set and no errors exist
+            if (isset($_FILES['photo']) && $_FILES['photo']['error'] === UPLOAD_ERR_OK) {
+                // Allowed file extensions and max file size
+                $allowed_extensions = ['png', 'jpg', 'jpeg'];
+                $upload_dir = './uploads/'; // Ensure this directory exists
+                $max_file_size = 5 * 1024 * 1024; // 5MB
+
+                // Check if the upload directory exists, if not create it
+                if (!file_exists($upload_dir)) {
+                    mkdir($upload_dir, 0777, true); // Create the directory with proper permissions
+                }
+
+                // Sanitize and validate the file name
+                $file_name = basename($_FILES['photo']['name']); // Prevent directory traversal
+                $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION)); // Get file extension
+                $file_size = $_FILES['photo']['size'];
+
+                // Generate a unique name for the file to avoid collisions
+                $new_name = uniqid('', true) . '.' . $file_ext; // More unique ID with additional entropy
+                $file_path = $upload_dir . $new_name;
+
+                // Check for allowed file extensions
+                if (!in_array($file_ext, $allowed_extensions)) {
+                    die("Invalid file type. Only PNG, JPG, and JPEG are allowed.");
+                }
+
+                // Check for file size limit
+                if ($file_size > $max_file_size) {
+                    die("File is too large. Maximum size is 5MB.");
+                }
+
+                // Move the uploaded file to the desired location
+                if (move_uploaded_file($_FILES['photo']['tmp_name'], $file_path)) {
+                    $photo = $new_name; // Store the new file name in the database
+                } else {
+                    // If file upload failed, use the default photo
+                    die("File upload failed.");
+                }
+            }
             }
 
-            function error($key) {
-                return $_SESSION['errors'][$key] ?? null;
-            }
             ?>
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+            
+            <div class="form-group">
+                <label for="photo">Photo <span>*</span></label>
+                <input type="file" name="photo" required accept="image/png, image/jpeg">
+            </div>
 
             <div class="form-group">
                 <label for="name">Service Name<span>*</span></label>
@@ -249,32 +292,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <span><?php echo $error; ?></span>
                 <?php endif; ?>
             </div>
+            
 
+            
             <div class="form-group">
                 <button type="submit">Add Service</button>
             </div>
 
         </form>
     </div>
-
-    <!-- Flash Message JavaScript -->
-    <script>
-        // Function to close the flash messages
-        function closeAlert(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        // Show flash success or error messages after form submission
-        window.onload = function() {
-            <?php if (isset($_SESSION['success'])): ?>
-                document.getElementById('flash-success').style.display = 'block';
-                setTimeout(() => { document.getElementById('flash-success').style.display = 'none'; }, 5000);
-            <?php elseif (isset($_SESSION['error'])): ?>
-                document.getElementById('flash-error').style.display = 'block';
-                setTimeout(() => { document.getElementById('flash-error').style.display = 'none'; }, 5000);
-            <?php endif; ?>
-        };
-    </script>
 
     <?php
     unset($_SESSION['errors'], $_SESSION['old']);

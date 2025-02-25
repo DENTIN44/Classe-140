@@ -9,41 +9,46 @@ class ServiceRegistration {
         $this->conn = $conn;
     }
 
-    // Method to register a new service
-    public function registerService($name, $description, $price) {
+    public function registerService($name, $description, $price, $photo) {
         // Validate input
-        if (empty($name) || empty($description) || empty($price)) {
+        if (empty($name) || empty($description) || empty($price) || empty($photo)) {
             throw new Exception("All fields are required.");
         }
-
+    
         if (!is_numeric($price) || $price <= 0) {
             throw new Exception("Price must be a positive number.");
         }
-
+    
+        // Sanitize inputs to prevent SQL injection
+        $name = $this->conn->real_escape_string($name);
+        $description = $this->conn->real_escape_string($description);
+        $price = (float)$price; // Ensure price is a float
+        $photo = $this->conn->real_escape_string($photo);
+    
         // Prepare the SQL statement
-        $stmt = $this->conn->prepare("INSERT INTO services (name, description, price) VALUES (?, ?, ?)");
+        $stmt = $this->conn->prepare("INSERT INTO services (name, description, price, photo) VALUES (?, ?, ?, ?)");
         if ($stmt === false) {
             throw new Exception("Prepare failed: " . $this->conn->error);
         }
-
+    
         // Bind parameters
-        $stmt->bind_param("ssd", $name, $description, $price);
-
+        $stmt->bind_param("ssds", $name, $description, $price, $photo);
+    
         // Execute the statement and check for success
         if (!$stmt->execute()) {
             throw new Exception("Execution failed: " . $stmt->error);
         }
-
+    
         // Check if any rows were affected
         if ($stmt->affected_rows > 0) {
             echo "Service registered successfully.";
         } else {
             echo "No rows affected. Check the query or data.";
         }
-
+    
         // Close the statement
         $stmt->close();
-
+    
         // Redirect after successful registration
         header("Location: register.php");
         exit; // Ensure the script stops after redirect
