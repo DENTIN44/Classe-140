@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = $_POST['name'];
     $description = $_POST['description'];
     $price = $_POST['price'];
-    $photo = $_FILES['photo'];
+    $photo = $_FILES['photo']['name'];
 
     try {
         // Register the service
@@ -251,12 +251,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     die("File is too large. Maximum size is 5MB.");
                 }
 
-                // Move the uploaded file to the desired location
-                if (move_uploaded_file($_FILES['photo']['tmp_name'], $file_path)) {
-                    $photo = $new_name; // Store the new file name in the database
+                if (move_uploaded_file($_FILES['foto']['tmp_name'], $upload_path)) {
+                    // Store the filename in the database
+                    $stmt = $conn->prepare("INSERT INTO your_table (photo) VALUES (?)");
+                    $stmt->bind_param("s", $new_name);
+                
+                    if ($stmt->execute()) {
+                        echo "File uploaded successfully!";
+                    } else {
+                        echo "Database error: " . $stmt->error;
+                    }
+                
+                    $stmt->close();
                 } else {
-                    // If file upload failed, use the default photo
-                    die("File upload failed.");
+                    echo "Failed to move the uploaded file.";
                 }
             }
             }

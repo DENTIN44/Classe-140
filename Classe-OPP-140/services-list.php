@@ -72,7 +72,11 @@ try {
                 <td>" . htmlspecialchars($row['price'] ?? '') . "</td>
                 <td>" . htmlspecialchars($row['created_at'] ?? '') . "</td>
                 <td>" . htmlspecialchars($row['updated_at'] ?? '') . "</td>
-                <td>" . htmlspecialchars($row['photo'] ?? '') . "</td>
+                <td>
+                    <a href='./uploads/" . htmlspecialchars($row['photo'] ?? '') . "' target='_blank'>
+                        " . htmlspecialchars($row['photo'] ?? '') . "
+                    </a>
+                </td>
                 <td>
                     <!-- Form to delete the user -->
                     <form method='POST' action='delete.php' style='display:inline;'>

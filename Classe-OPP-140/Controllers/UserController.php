@@ -54,4 +54,20 @@ class RegisterController {
     }
 }
 
+class PhotoController {
+    private $model;
+
+    public function __construct($conn) {
+        $this->model = new PhotoModel($conn);
+    }
+
+    public function displayPhotos() {
+        // Fetch data from the model
+        $photos = $this->model->getAllPhotos();
+
+        // Pass data to the view
+        include 'PhotoView.php';
+    }
+}
+
 ?>
