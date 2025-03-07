@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 // import Calculator from './components/Calculator'; 
 import StatusUpdate from './components/StatusUpdate'; // Import StatusUpdate component
+
+import NewApp from "./NewApp.jsx";
+
+
 import First from './components/First'; // Import First component
 import Second from './components/Second'; // Import Second component
 import Third from './components/Third'; // Import Third component
@@ -38,6 +42,8 @@ function App() {
         <Third />
 
         <Fourth />
+
+        <NewApp/>
       </header>
     </div>
   );
