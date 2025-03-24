@@ -71,7 +71,7 @@ class ServiceHandler {
 
         if ($serviceId === null && $search === null) {
             // SQL query to select all services ordered by creation date in descending order
-            $sql = "SELECT * FROM services ORDER BY createdAt DESC";
+            $sql = "SELECT * FROM services ORDER BY created_at DESC";
             $result = $this->conn->query($sql);
 
             // Initialize an empty array to store the services

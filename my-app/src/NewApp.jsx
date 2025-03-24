@@ -1,53 +1,62 @@
-    
 import React from 'react';
 
 class NewApp extends React.Component {
-   constructor(props) {
-      super(props);
+  constructor(props) {
+    super(props);
 
-      this.state = {
-         data: 0
-      }
-      this.setNewNumber = this.setNewNumber.bind(this)
-   };
-   setNewNumber() {
-      this.setState({data: this.state.data + 1})
-   }
-   render() {
-      return (
-         <div>
-            <button onClick = {this.setNewNumber}>INCREMENT</button>
-            <Content myNumber = {this.state.data}></Content>
-         </div>
-      );
-   }
+    this.state = {
+      data: 0,
+      showContent: true, // Add a state to control Content visibility
+    };
+    this.setNewNumber = this.setNewNumber.bind(this);
+    this.toggleContent = this.toggleContent.bind(this); // Add a method to toggle Content
+  }
+
+  setNewNumber() {
+    this.setState({ data: this.state.data + 1 });
+  }
+
+  toggleContent() {
+    this.setState((prevState) => ({ showContent: !prevState.showContent }));
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.setNewNumber}>INCREMENT</button>
+        <button onClick={this.toggleContent}>
+          {this.state.showContent ? 'Hide Content' : 'Show Content'}
+        </button>
+        {this.state.showContent && <Content myNumber={this.state.data} />}
+      </div>
+    );
+  }
 }
 
 class Content extends React.Component {
-  // Replaces componentWillMount
   componentDidMount() {
     console.log('Component DID MOUNT!');
   }
 
-  // Replaces componentWillReceiveProps
   static getDerivedStateFromProps(nextProps, prevState) {
     console.log('Deriving state from props...');
-    return null; // Return null if no state update is needed
+    return null; // No state update needed
   }
 
-  // Replaces componentWillUpdate
   componentDidUpdate(prevProps, prevState) {
     console.log('Component DID UPDATE!');
   }
 
-  // Replaces componentWillUnmount
   componentWillUnmount() {
     console.log('Component WILL UNMOUNT!');
   }
 
-  // Controls whether the component should re-render
   shouldComponentUpdate(nextProps, nextState) {
-    return true; // Return true to allow re-render, false to prevent
+    // Example logic to prevent unnecessary re-renders
+    if (nextProps.myNumber === this.props.myNumber) {
+      return false;
+    }
+    return true;
   }
 
   render() {
@@ -59,4 +68,4 @@ class Content extends React.Component {
   }
 }
 
-export default NewApp; // Fixed export statement
+export default NewApp;
