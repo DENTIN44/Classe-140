@@ -8,7 +8,7 @@ import Fourth from './components/Fourth';
 import HelloReact from './components/HelloReact';   
 import NewApp from './NewApp.jsx';                 
 import './App.css';                                // Import CSS for styling
-import { DemoForm, DemoFormTwo, DemoFormThree, DemoFormFour } from './components/ControlledComponent';
+import { DemoForm, DemoFormTwo, DemoFormThree, DemoFormFour, DemoFormFive, DemoFormSix } from './components/ControlledComponent';
 
 /**
  * Main App component (Class-based)
@@ -93,6 +93,8 @@ class App extends Component {
           <DemoFormTwo />
           <DemoFormThree />
           <DemoFormFour />
+          <DemoFormFive />
+          <DemoFormSix />
           <br/><br/><br/><br/>
         </header>
       </div>
