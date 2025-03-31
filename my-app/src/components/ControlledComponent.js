@@ -240,8 +240,6 @@ const DemoFormSix = () => {
 };
 
 // Updated DemoFormSix (Generical type)
-import { useState } from "react";
-
 const FormInput = ({ name, value, onChange, type = "text", checked }) => {
     return type === "checkbox" ? (
         <div className="form-check">

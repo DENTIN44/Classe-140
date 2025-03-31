@@ -10,6 +10,8 @@ import NewApp from './NewApp.jsx';
 import './App.css';                                // Import CSS for styling
 import { DemoForm, DemoFormTwo, DemoFormThree, DemoFormFour, DemoFormFive, DemoFormSix } from './components/ControlledComponent';
 
+
+
 /**
  * Main App component (Class-based)
  * 
@@ -84,18 +86,32 @@ class App extends Component {
 
           {/* Render the other components */}
           <First />
-          <Second />
-          <Third />
-          <Fourth />
-          <NewApp />
-          <HelloReact />
-          <DemoForm />
-          <DemoFormTwo />
-          <DemoFormThree />
-          <DemoFormFour />
-          <DemoFormFive />
-          <DemoFormSix />
           <br/><br/><br/><br/>
+          <Second />
+          <br/><br/><br/><br/>
+          <Third />
+          <br/><br/><br/><br/>
+          <Fourth />
+          <br/><br/><br/><br/>
+          <NewApp />
+          <br/><br/><br/><br/>
+          <HelloReact />
+          <br/><br/><br/><br/>
+          <DemoForm />
+          <br/><br/><br/><br/>
+          <DemoFormTwo />
+          <br/><br/><br/><br/>
+          <DemoFormThree />
+          <br/><br/><br/><br/>
+          <DemoFormFour />
+          <br/><br/><br/><br/>
+          <DemoFormFive />
+          <br/><br/><br/><br/>
+          <DemoFormFive />
+          <br/><br/><br/><br/>
+          <DemoFormFive />
+          <br/><br/><br/><br/>
+          <DemoFormSix />
         </header>
       </div>
     );
